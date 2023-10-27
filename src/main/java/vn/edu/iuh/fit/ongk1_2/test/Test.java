@@ -8,7 +8,7 @@ public class Test {
     public static void main(String[] args) {
         CandidateRepository candidateRepository = new CandidateRepository();
 
-        for (Candidate candidate : candidateRepository.getCandidatesHaveEmail()) {
+        for (Candidate candidate : candidateRepository.getCandidatesByPhoneAndCompany("023333333", "CTY D")) {
             System.out.println(candidate);
         }
 

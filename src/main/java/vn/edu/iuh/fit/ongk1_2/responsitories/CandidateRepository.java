@@ -74,11 +74,31 @@ public class CandidateRepository {
             transaction = session.beginTransaction();
             List<Candidate> candidates = session.createNamedQuery("Candidate.haveEmail", Candidate.class)
                     .getResultList();
-
             transaction.commit();
             return candidates;
         }catch (Exception e){
             transaction.rollback();
+        }
+        return null;
+    }
+    public List<Candidate> getCandidatesByPhoneAndCompany(String phone, String company) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            // Assuming there's a mapping between Candidate and Experience entities using "can_id"
+            List<Candidate> candidates = session.createQuery("select c from Candidate c join c.experiences e where c.phone = :phone and e.companyName = :company", Candidate.class)
+                    .setParameter("phone", phone)
+                    .setParameter("company", company)
+                    .getResultList();
+
+            transaction.commit();
+            return candidates;
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();  // Log or handle the exception appropriately
         }
         return null;
     }
